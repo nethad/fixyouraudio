@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="theme-color" content="#000000" />
+
+    <title>FixYourAudio</title>
+    <meta name="description" content="FixYourAudio" />
+    <meta name="author" content="nethad" />
+
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <h1>Fix Your Audio 2</h1>
+
+    <button id="btn-start-recording">Start Recording</button>
+    <button id="btn-stop-recording" disabled>Stop Recording</button>
+    <button id="btn-release-microphone" disabled>Release Microphone</button>
+
+    <hr />
+    <div><audio controls autoplay playsinline></audio></div>
+
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <script src="node_modules/recordrtc/RecordRTC.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>

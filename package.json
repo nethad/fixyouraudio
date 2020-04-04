@@ -1,0 +1,14 @@
+{
+  "name": "fixyouraudio",
+  "version": "1.0.0",
+  "description": "Fix Your audio",
+  "main": "index.js",
+  "repository": "https://github.com/nethad/fixyouraudio",
+  "author": "Thomas Ritter",
+  "license": "MIT",
+  "dependencies": {
+    "eslint": "^6.8.0",
+    "prettier": "^2.0.2",
+    "recordrtc": "^5.5.9"
+  }
+}
