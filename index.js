@@ -1,7 +1,8 @@
 // import adapter from "webrtc-adapter"
 import SoundMeter from "./SoundMeter"
-
 import RecordRTC from "./node_modules/recordrtc/RecordRTC"
+
+const RECORD_DURATION_MS = 8000
 
 const errorMessageElement = document.querySelector("#errorMessage")
 const audioSourcesElement = document.querySelector("#audioSources")
@@ -91,6 +92,8 @@ const quitStream = (stream) => {
   stream.getTracks().forEach((track) => {
     track.stop()
   })
+  setupRecordingButton.style.display = "none"
+  startRecordingButton.style.visibility = "visible"
 }
 
 const enumerateDevices = (devices) => {
@@ -98,7 +101,6 @@ const enumerateDevices = (devices) => {
   devices.forEach((device) => {
     addDevice(device)
   })
-  setupRecordingButton.textContent = "Refresh devices"
 }
 
 const activateFirstDevice = (previouslySelectedDevice) => {
@@ -183,7 +185,7 @@ const startRecording = (stream) => {
   const recorder = RecordRTC(stream, options)
 
   recorder
-    .setRecordingDuration(2000)
+    .setRecordingDuration(RECORD_DURATION_MS)
     .onRecordingStopped(() => finishRecording(stream, recorder, intervalToken))
   recorder.startRecording()
   startRecordingButton.disabled = true

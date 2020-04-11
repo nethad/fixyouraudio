@@ -14,45 +14,48 @@
   </head>
 
   <body>
-    <h1>Fix Your Audio</h1>
+    <div class="container">
+      <h1>Fix Your Audio</h1>
 
-    <p id="errorMessage" style="color: red;"></p>
+      <p id="errorMessage" style="color: red;"></p>
 
-    <p>
-      Hi! This is a web page to test all your audio input options.
-    </p>
+      <p>
+        Hi! This is a web page to test all your audio input options.
+      </p>
 
-    <p>
-      First, hit <i>Setup Recording</i> and allow the microphone to be used by this website. After
-      that, try all your input sources <b>one by one</b> and hit record. It will record for
-      <b>8 seconds</b> and then auto-play afterwards. You can listen to every recording again and
-      compare. If you plug in more options, hit <i>Refresh devices</i> to make them available.
-    </p>
+      <p>
+        First, hit <i>Setup Recording</i> and allow the microphone to be used by this website. After
+        that, try all your input sources <b>one by one</b> and hit record. It will record for
+        <b>8 seconds</b> and then auto-play afterwards. You can listen to every recording again and
+        compare. You can plug in more options, e.g. USB devices to try out more sources and you can
+        record each option more than once of course.
+      </p>
 
-    <button id="setupRecording">Setup Recording</button>
+      <button id="setupRecording" class="primary">Setup Recording</button>
 
-    <button id="debug">Debug</button>
+      <button id="debug" style="display: none;">Debug</button>
 
-    <p id="audioSources">
-      <i>Hit Setup Recording to show devices...</i>
-    </p>
+      <p id="audioSources">
+        <i>Hit Setup Recording to show devices...</i>
+      </p>
 
-    <div>
-      <button id="startRecording">Record</button>
-      <div id="volumeMeter" style="visibility: hidden; display: inline-block;">
-        <meter high="0.25" max="1" value="0"></meter>
+      <div>
+        <button id="startRecording" class="primary" style="visibility: hidden;">Record</button>
+        <div id="volumeMeter" style="visibility: hidden; display: inline-block;">
+          <meter high="0.25" max="1" value="0"></meter>
+        </div>
       </div>
+
+      <p>
+        Now read the sentence:
+        <b
+          >It was nice having Alex home all day and having the family together, but all good things
+          come to an end.</b
+        >
+      </p>
+
+      <div id="audioRecordings"></div>
     </div>
-
-    <p>
-      Now read the sentence:
-      <b
-        >It was nice having Alex home all day and having the family together, but all good things
-        come to an end.</b
-      >
-    </p>
-
-    <div id="audioRecordings"></div>
 
     <noscript>
       You need to enable JavaScript to run this app.

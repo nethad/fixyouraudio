@@ -1,1 +1,8 @@
 @import "mini.css";
+
+.container {
+  padding-left: 20%;
+  padding-right: 20%;
+  padding-top: 5rem;
+  min-width: 400px;
+}
