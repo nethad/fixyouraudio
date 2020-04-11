@@ -21,6 +21,11 @@ const currentAudioDeviceIds = () => {
 
 const selectedDevice = () => {
   const selectedDevice = document.querySelector("input[name=audioInput]:checked")
+
+  if (!selectedDevice) {
+    return {}
+  }
+
   return {
     id: selectedDevice.dataset.deviceId,
     label: selectedDevice.dataset.deviceLabel,
@@ -96,15 +101,26 @@ const enumerateDevices = (devices) => {
   setupRecordingButton.textContent = "Refresh devices"
 }
 
-const activateFirstDevice = () => {
-  audioSourcesElement.children[0].querySelector("input").checked = true
+const activateFirstDevice = (previouslySelectedDevice) => {
+  Array.from(audioSourcesElement.children).forEach((child) => {
+    const radioButton = child.querySelector("input")
+    if (radioButton.id === previouslySelectedDevice.id) {
+      radioButton.checked = true
+    }
+  })
+
+  if (!selectedDevice().id) {
+    audioSourcesElement.children[0].querySelector("input").checked = true
+  }
 }
 
 const onEnumerateDevices = (stream) => {
+  const previouslySelectedDevice = selectedDevice()
+
   navigator.mediaDevices
     .enumerateDevices()
     .then(enumerateDevices)
-    .then(activateFirstDevice)
+    .then(() => activateFirstDevice(previouslySelectedDevice))
     .then(() => quitStream(stream))
     .catch((err) => {
       showErrorMessage(err.name + ": " + err.message)
@@ -175,14 +191,20 @@ const startRecording = (stream) => {
 }
 
 const onSetupRecording = () => {
-  navigator.mediaDevices.getUserMedia({ audio: true }).then(onEnumerateDevices)
+  navigator.mediaDevices
+    .getUserMedia({ audio: true })
+    .then(onEnumerateDevices)
+    .catch(showErrorMessage)
 }
 
 const onStartRecording = () => {
   navigator.mediaDevices
     .getUserMedia({ audio: { deviceId: selectedDevice().id } })
     .then(startRecording)
+    .catch(showErrorMessage)
 }
+
+navigator.mediaDevices.ondevicechange = onSetupRecording
 
 setupRecordingButton.onclick = onSetupRecording
 startRecordingButton.onclick = onStartRecording
