@@ -16,17 +16,31 @@
   <body>
     <h1>Fix Your Audio 2</h1>
 
-    <button id="btn-start-recording">Start Recording</button>
-    <button id="btn-stop-recording" disabled>Stop Recording</button>
-    <button id="btn-release-microphone" disabled>Release Microphone</button>
+    <div><audio id="tempInput" /></div>
 
-    <hr />
-    <div><audio controls autoplay playsinline></audio></div>
+    <button id="setupRecording">Setup Recording</button>
+
+    <p id="audioSources"></p>
+
+    <div id="instant">
+      <div class="label">Instant:</div>
+      <meter high="0.25" max="1" value="0"></meter>
+      <div class="value"></div>
+    </div>
+
+    <table>
+      <tbody>
+        <tr>
+          <td>Message</td>
+          <td>Recording</td>
+        </tr>
+      </tbody>
+    </table>
 
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
     <script src="node_modules/recordrtc/RecordRTC.js"></script>
-    <script src="index.js"></script>
+    <script src="index.js" type="module"></script>
   </body>
 </html>
