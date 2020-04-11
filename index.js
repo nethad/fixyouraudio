@@ -5,12 +5,25 @@ const errorMessageElement = document.querySelector("#errorMessage")
 const audioSourcesElement = document.querySelector("#audioSources")
 const setupRecordingButton = document.querySelector("#setupRecording")
 const startRecordingButton = document.querySelector("#startRecording")
+const debugButton = document.querySelector("#debug")
 const instantMeter = document.querySelector("#volumeMeter meter")
 const instantValueDisplay = document.querySelector("#volumeMeter .value")
 const audioRecordingsElement = document.querySelector("#audioRecordings tbody")
 
 const showErrorMessage = (message) => {
   errorMessageElement.textContent = message
+}
+
+const currentAudioDeviceIds = () => {
+  return Array.from(document.querySelectorAll("input[name=audioInput]")).map((input) => input.id)
+}
+
+const selectedDevice = () => {
+  const selectedDevice = document.querySelector("input[name=audioInput]:checked")
+  return {
+    id: selectedDevice.dataset.deviceId,
+    label: selectedDevice.dataset.deviceLabel,
+  }
 }
 
 const audioSourceElement = (device) => {
@@ -21,9 +34,11 @@ const audioSourceElement = (device) => {
   radioButton.type = "radio"
   radioButton.value = device.deviceId
   radioButton.id = device.deviceId
+  radioButton.dataset.deviceLabel = device.label
+  radioButton.dataset.deviceId = device.deviceId
 
   const label = document.createElement("label")
-  label.for = device.deviceId
+  label.setAttribute("for", device.deviceId)
   label.textContent = device.label
 
   rootDiv.appendChild(radioButton)
@@ -32,15 +47,12 @@ const audioSourceElement = (device) => {
 }
 
 const addDevice = (device) => {
+  const deviceId = device.deviceId
   if (device.kind === "audioinput") {
-    audioSourcesElement.appendChild(audioSourceElement(device))
-  } else {
-    // console.log("Some other kind of source/device: ", device)
+    if (!currentAudioDeviceIds().includes(deviceId)) {
+      audioSourcesElement.appendChild(audioSourceElement(device))
+    }
   }
-}
-
-const removeInputDevices = () => {
-  Array.from(audioSourcesElement.children).forEach((child) => child.remove())
 }
 
 const appendRecording = (src) => {
@@ -54,8 +66,11 @@ const appendRecording = (src) => {
 
   const tr = document.createElement("tr")
   const tdAudio = document.createElement("td")
+  const tdLabel = document.createElement("td")
   tdAudio.appendChild(newAudio)
   tr.append(tdAudio)
+  tdLabel.textContent = selectedDevice().label
+  tr.append(tdLabel)
   audioRecordingsElement.appendChild(tr)
 }
 
@@ -66,8 +81,6 @@ const quitStream = (stream) => {
 }
 
 const enumerateDevices = (devices) => {
-  removeInputDevices()
-  window.deviceIds = devices.map((d) => d.deviceId)
   devices.forEach((device) => {
     addDevice(device)
   })
@@ -89,7 +102,9 @@ const onEnumerateDevices = (stream) => {
     })
 }
 
-const startRecording = (stream) => {
+const setMeterValue = (value) => (instantMeter.value = instantValueDisplay.innerText = value)
+
+const showVolumeMeter = (stream) => {
   try {
     window.AudioContext = window.AudioContext || window.webkitAudioContext
     window.audioContext = new AudioContext()
@@ -100,10 +115,8 @@ const startRecording = (stream) => {
   const soundMeter = (window.soundMeter = new SoundMeter(window.audioContext))
   let intervalToken
 
-  const setMeterValue = (value) => (instantMeter.value = instantValueDisplay.innerText = value)
-
   instantMeter.style.visibility = "visible"
-  soundMeter.connectToSource(stream, function (e) {
+  soundMeter.connectToSource(stream, (e) => {
     if (e) {
       showErrorMessage(e)
       return
@@ -112,6 +125,17 @@ const startRecording = (stream) => {
       setMeterValue((soundMeter.instant * 2.5).toFixed(2))
     }, 200)
   })
+  return intervalToken
+}
+
+const resetVolumeMeter = (intervalToken) => {
+  setMeterValue(0)
+  clearInterval(intervalToken)
+  instantMeter.style.visibility = "hidden"
+}
+
+const startRecording = (stream) => {
+  const intervalToken = showVolumeMeter(stream)
 
   let options = {
     type: "audio",
@@ -126,10 +150,8 @@ const startRecording = (stream) => {
     stream.getTracks().forEach((track) => {
       track.stop()
     })
-    setMeterValue(0)
-    clearInterval(intervalToken)
-    instantMeter.style.visibility = "hidden"
 
+    resetVolumeMeter(intervalToken)
     appendRecording(URL.createObjectURL(recorder.getBlob()))
   }
 
@@ -142,8 +164,13 @@ const onSetupRecording = () => {
 }
 
 const onStartRecording = () => {
-  navigator.mediaDevices.getUserMedia({ audio: true }).then(startRecording)
+  navigator.mediaDevices
+    .getUserMedia({ audio: { deviceId: selectedDevice().id } })
+    .then(startRecording)
 }
 
 setupRecordingButton.onclick = onSetupRecording
 startRecordingButton.onclick = onStartRecording
+debugButton.onclick = () => {
+  console.log(selectedDevice())
+}
