@@ -65,6 +65,12 @@ const removeDevices = () => {
   Array.from(audioSourcesElement.children).forEach((child) => child.remove())
 }
 
+const setAllDevicesDisabled = (disabled) => {
+  document
+    .querySelectorAll("input[name=audioInput]")
+    .forEach((radio) => (radio.disabled = disabled))
+}
+
 const appendRecording = (src) => {
   let newAudio = document.createElement("audio")
   newAudio.controls = true
@@ -169,9 +175,11 @@ const finishRecording = (stream, recorder, intervalToken) => {
   resetVolumeMeter(intervalToken)
   appendRecording(URL.createObjectURL(recorder.getBlob()))
   startRecordingButton.textContent = "Record"
+  setAllDevicesDisabled(false)
 }
 
 const startRecording = (stream) => {
+  setAllDevicesDisabled(true)
   const intervalToken = showVolumeMeter(stream)
 
   let options = {
