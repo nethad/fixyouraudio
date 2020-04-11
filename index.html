@@ -6,40 +6,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="theme-color" content="#000000" />
 
-    <title>FixYourAudio</title>
-    <meta name="description" content="FixYourAudio" />
+    <title>Fix Your Audio</title>
+    <meta name="description" content="Fix Your Audio" />
     <meta name="author" content="nethad" />
 
     <link rel="stylesheet" href="styles.css" />
   </head>
 
   <body>
-    <h1>Fix Your Audio 2</h1>
+    <h1>Fix Your Audio</h1>
 
     <p id="errorMessage"></p>
 
-    <div><audio id="tempInput" /></div>
+    <p>
+      Hi! This is a web page to test all your audio input options.
+    </p>
+
+    <p>
+      First, hit <i>Setup Recording</i> and allow the microphone to be used by this website. After
+      that, try all your input sources <b>one by one</b> and hit record. It will record for
+      <b>8 seconds</b> and then auto-play afterwards. You can listen to every recording again and
+      compare. If you plug in more options, hit <i>Refresh devices</i> to make them available.
+    </p>
 
     <button id="setupRecording">Setup Recording</button>
-    <button id="startRecording">Record</button>
+
     <button id="debug">Debug</button>
 
-    <p id="audioSources"></p>
+    <p id="audioSources">
+      <i>Hit Setup Recording to show devices...</i>
+    </p>
 
-    <div id="volumeMeter" style="visibility: hidden;">
-      <meter high="0.25" max="1" value="0"></meter>
-      <div class="value"></div>
+    <div>
+      <button id="startRecording">Record</button>
+      <div id="volumeMeter" style="visibility: hidden; display: inline-block;">
+        <meter high="0.25" max="1" value="0"></meter>
+      </div>
     </div>
 
-    <table id="audioRecordings">
-      <tbody></tbody>
-    </table>
+    <p>
+      Now read the sentence:
+      <b
+        >It was nice having Alex home all day and having the family together, but all good things
+        come to an end.</b
+      >
+    </p>
+
+    <div id="audioRecordings"></div>
 
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
-    <!-- <script src="/node_modules/recordrtc/RecordRTC.js"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/RecordRTC/5.5.9/RecordRTC.js"></script>
+    <!-- <script src="node_modules/recordrtc/RecordRTC.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/RecordRTC/5.5.9/RecordRTC.js"></script> -->
     <script src="index.js" type="module"></script>
   </body>
 </html>

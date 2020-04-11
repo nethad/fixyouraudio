@@ -1,14 +1,15 @@
 // import adapter from "webrtc-adapter"
 import SoundMeter from "./SoundMeter"
 
+import RecordRTC from "./node_modules/recordrtc/RecordRTC"
+
 const errorMessageElement = document.querySelector("#errorMessage")
 const audioSourcesElement = document.querySelector("#audioSources")
 const setupRecordingButton = document.querySelector("#setupRecording")
 const startRecordingButton = document.querySelector("#startRecording")
 const debugButton = document.querySelector("#debug")
 const instantMeter = document.querySelector("#volumeMeter meter")
-const instantValueDisplay = document.querySelector("#volumeMeter .value")
-const audioRecordingsElement = document.querySelector("#audioRecordings tbody")
+const audioRecordingsElement = document.querySelector("#audioRecordings")
 
 const showErrorMessage = (message) => {
   errorMessageElement.textContent = message
@@ -55,6 +56,10 @@ const addDevice = (device) => {
   }
 }
 
+const removeDevices = () => {
+  Array.from(audioSourcesElement.children).forEach((child) => child.remove())
+}
+
 const appendRecording = (src) => {
   let newAudio = document.createElement("audio")
   newAudio.controls = true
@@ -64,14 +69,17 @@ const appendRecording = (src) => {
     newAudio.src = src
   }
 
-  const tr = document.createElement("tr")
-  const tdAudio = document.createElement("td")
-  const tdLabel = document.createElement("td")
-  tdAudio.appendChild(newAudio)
-  tr.append(tdAudio)
-  tdLabel.textContent = selectedDevice().label
-  tr.append(tdLabel)
-  audioRecordingsElement.appendChild(tr)
+  const rootDiv = document.createElement("div")
+  rootDiv.setAttribute("class", "card")
+  const labelSection = document.createElement("div")
+  labelSection.setAttribute("class", "section")
+  labelSection.textContent = selectedDevice().label
+  const audioSection = document.createElement("div")
+  audioSection.setAttribute("class", "section")
+  audioSection.appendChild(newAudio)
+  rootDiv.append(labelSection)
+  rootDiv.append(audioSection)
+  audioRecordingsElement.appendChild(rootDiv)
 }
 
 const quitStream = (stream) => {
@@ -81,6 +89,7 @@ const quitStream = (stream) => {
 }
 
 const enumerateDevices = (devices) => {
+  removeDevices()
   devices.forEach((device) => {
     addDevice(device)
   })
@@ -102,7 +111,7 @@ const onEnumerateDevices = (stream) => {
     })
 }
 
-const setMeterValue = (value) => (instantMeter.value = instantValueDisplay.innerText = value)
+const setMeterValue = (value) => (instantMeter.value = value)
 
 const showVolumeMeter = (stream) => {
   try {
@@ -134,6 +143,17 @@ const resetVolumeMeter = (intervalToken) => {
   instantMeter.style.visibility = "hidden"
 }
 
+const finishRecording = (stream, recorder, intervalToken) => {
+  stream.getTracks().forEach((track) => {
+    track.stop()
+  })
+
+  startRecordingButton.disabled = false
+  resetVolumeMeter(intervalToken)
+  appendRecording(URL.createObjectURL(recorder.getBlob()))
+  startRecordingButton.textContent = "Record"
+}
+
 const startRecording = (stream) => {
   const intervalToken = showVolumeMeter(stream)
 
@@ -146,17 +166,12 @@ const startRecording = (stream) => {
   }
   const recorder = RecordRTC(stream, options)
 
-  const stopRecordingCallback = () => {
-    stream.getTracks().forEach((track) => {
-      track.stop()
-    })
-
-    resetVolumeMeter(intervalToken)
-    appendRecording(URL.createObjectURL(recorder.getBlob()))
-  }
-
-  recorder.setRecordingDuration(3000).onRecordingStopped(stopRecordingCallback)
+  recorder
+    .setRecordingDuration(2000)
+    .onRecordingStopped(() => finishRecording(stream, recorder, intervalToken))
   recorder.startRecording()
+  startRecordingButton.disabled = true
+  startRecordingButton.textContent = "Recording..."
 }
 
 const onSetupRecording = () => {
