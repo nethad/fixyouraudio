@@ -1,4 +1,3 @@
-// import adapter from "webrtc-adapter"
 import SoundMeter from "./SoundMeter"
 import RecordRTC from "./node_modules/recordrtc/RecordRTC"
 
