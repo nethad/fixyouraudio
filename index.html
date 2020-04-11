@@ -16,31 +16,29 @@
   <body>
     <h1>Fix Your Audio 2</h1>
 
+    <p id="errorMessage"></p>
+
     <div><audio id="tempInput" /></div>
 
     <button id="setupRecording">Setup Recording</button>
+    <button id="startRecording">Record</button>
 
     <p id="audioSources"></p>
 
-    <div id="instant">
-      <div class="label">Instant:</div>
+    <div id="volumeMeter" style="visibility: hidden;">
       <meter high="0.25" max="1" value="0"></meter>
       <div class="value"></div>
     </div>
 
-    <table>
-      <tbody>
-        <tr>
-          <td>Message</td>
-          <td>Recording</td>
-        </tr>
-      </tbody>
+    <table id="audioRecordings">
+      <tbody></tbody>
     </table>
 
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
-    <script src="node_modules/recordrtc/RecordRTC.js"></script>
+    <!-- <script src="/node_modules/recordrtc/RecordRTC.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/RecordRTC/5.5.9/RecordRTC.js"></script>
     <script src="index.js" type="module"></script>
   </body>
 </html>
