@@ -4516,10 +4516,10 @@ readdirp@^2.2.1:
     micromatch "^3.1.10"
     readable-stream "^2.0.2"
 
-recordrtc@^5.5.9:
-  version "5.5.9"
-  resolved "https://registry.yarnpkg.com/recordrtc/-/recordrtc-5.5.9.tgz#cda4b4c965a499cfa9d5b23e27f2043fb3d28399"
-  integrity sha512-6T1tn80nRfsXrAoYWINwz+hBKk+pB5Im4I0BS52Og1ruQvrEdV3IUcm+AKwLMHNyBAhJ2DaVa+9pukTRxMF/uA==
+recordrtc@^5.6.1:
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/recordrtc/-/recordrtc-5.6.1.tgz#da876700fa149bbb230df7591a020e2c43de01c8"
+  integrity sha512-UU7Fd9IIuz60TPq4GgL1qtgo2mzEZWzPxEraNe32eo4/ndjKmuj715HB7W1k63G09teM1dXJYubPEmLkQ/lq5Q==
 
 regenerate-unicode-properties@^8.2.0:
   version "8.2.0"
